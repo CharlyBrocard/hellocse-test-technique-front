@@ -55,12 +55,7 @@ function onRefresh() {
 async function onReloadDirect() {
   console.log('onReloadDirect appelé');
   try {
-    const res = await fetch('/api/todos');
-    const data = await res.json();
-    console.log('données rechargées directement:', data);
-    _.each(data, (item) => {
-      store.commit('ADD_TODO', item.title);
-    });
+    await store.dispatch('fetchTodos');
   } catch (e) {
     console.log('erreur dans onReloadDirect:', e);
   }
