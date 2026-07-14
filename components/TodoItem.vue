@@ -87,8 +87,8 @@ function getFormattedDate() {
         textDecoration: props.todo.completed ? 'line-through' : 'none',
         opacity: props.todo.completed ? 0.5 : 1,
       }"
-      v-html="props.todo.text"
-    ></span>
+      >{{ props.todo.text }}</span
+    >
 
     <small
       style="color: #aaa; margin: 0 10px; font-size: 11px; white-space: nowrap"
