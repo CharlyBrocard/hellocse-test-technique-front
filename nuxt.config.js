@@ -4,45 +4,39 @@
 // sérieux, je te jure.
 
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
-
+  compatibilityDate: "2024-11-01",
+  modules: ["@nuxt/eslint"],
   ssr: false,
-  
+
   vite: {
     optimizeDeps: {
-      include: [
-        '@vue/devtools-core',
-        '@vue/devtools-kit',
-        'lodash',
-        'moment',
-      ]
-    }
+      include: ["@vue/devtools-core", "@vue/devtools-kit", "lodash", "moment"],
+    },
   },
 
   build: {
-    transpile: ['vuex', 'vue3-styled-components'],
+    transpile: ["vuex", "vue3-styled-components"],
   },
-  
 
   app: {
     head: {
-      title: 'Ma Super Todo App',
+      title: "Ma Super Todo App",
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
       ],
       link: [
         {
-          rel: 'stylesheet',
-          href: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css',
+          rel: "stylesheet",
+          href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css",
         },
       ],
       script: [
         {
-          src: 'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js',
+          src: "https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js",
         },
       ],
     },
   },
 
-  plugins: [{ src: '~/plugins/vuex.client.js', mode: 'client' }],
+  plugins: [{ src: "~/plugins/vuex.client.js", mode: "client" }],
 });
