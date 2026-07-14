@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-type FilterValue = 'all' | 'active' | 'completed';
+export type FilterValue = 'all' | 'active' | 'completed';
 
 interface FilterOption {
   value: FilterValue;

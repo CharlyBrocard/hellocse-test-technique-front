@@ -84,9 +84,9 @@ function onFilterChange(filter) {
 
     <TodoForm />
     <TodoFilter
-      :current-filter="currentFilter"
-      :active-count="activeCount"
-      :completed-count="completedCount"
+      :currentFilter="currentFilter"
+      :activeCount="activeCount"
+      :completedCount="completedCount"
       @filterChange="onFilterChange"
     />
 
