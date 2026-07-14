@@ -27,15 +27,21 @@ const StyledItem = styled('div', itemProps)`
   }
 `;
 
-function onToggle() {
+async function onToggle() {
   console.log(
     'onToggle appelé pour todo id:',
     props.todo.id,
     'état:',
     props.todo.completed,
   );
-  props.todo.completed = !props.todo.completed;
-  store.commit('TOGGLE_TODO', props.todo.id);
+  try {
+    await fetch(`/api/todos/${props.todo.id}`, {
+      method: 'PUT',
+    });
+    store.commit('TOGGLE_TODO', props.todo.id);
+  } catch (e) {
+    console.log('erreur lors du PUT API:', e);
+  }
 }
 
 function onDelete() {
