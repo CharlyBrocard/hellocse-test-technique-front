@@ -1,79 +1,70 @@
-<template>
-  <div
-    style="
-      display: flex;
-      gap: 8px;
-      margin-bottom: 20px;
-      justify-content: center;
-    "
-  >
-    <button
-      v-for="f in filters"
-      :key="f.value"
-      class="btn btn-sm"
-      :class="currentFilter == f.value ? 'btn-primary' : 'btn-default'"
-      @click="setFilter(f.value)"
-    >
-      {{ f.label }}
-      <span v-if="f.value == 'active'" class="badge">{{ activeCount }}</span>
-      <span v-if="f.value == 'completed'" class="badge">{{
-        completedCount
-      }}</span>
-    </button>
+<script setup lang="ts">
+import { ref } from 'vue';
 
-    <small
-      v-if="lastFilterChange"
-      style="align-self: center; color: #bbb; font-size: 11px"
-    >
-      (modifié à {{ lastFilterChange }})
-    </small>
-  </div>
-</template>
+type FilterValue = 'all' | 'active' | 'completed';
 
-<script setup>
-import { computed, ref } from 'vue';
-import { useStore } from 'vuex';
-import moment from 'moment';
-import _ from 'lodash';
+interface FilterOption {
+  value: FilterValue;
+  label: string;
+}
 
-const store = useStore();
+const props = defineProps<{
+  currentFilter: FilterValue;
+  activeCount: number;
+  completedCount: number;
+}>();
 
-const filters = [
+const emit = defineEmits(['filterChange']);
+
+const filters: FilterOption[] = [
   { value: 'all', label: 'Toutes' },
   { value: 'active', label: 'À faire' },
   { value: 'completed', label: 'Terminées' },
 ];
 
-const currentFilter = computed(() => {
-  console.log('computed currentFilter appelé');
-  return store.state.filter;
-});
+const lastFilterChange = ref<string | null>(null);
 
-const activeCount = computed(() => store.getters.activeCount);
-const completedCount = computed(() => store.getters.completedCount);
-
-const lastFilterChange = ref(null);
-
-function setFilter(filter) {
-  console.log('setFilter appelé avec:', filter);
-
-  lastFilterChange.value = moment().format('HH:mm:ss');
-  console.log('filtre changé à', lastFilterChange.value);
-
-  store.commit('SET_FILTER', filter);
-
-  if (!_.includes(_.map(filters, 'value'), filter)) {
-    console.log('filtre inconnu:', filter);
-  }
-
-  const stats = _.countBy(store.state.todos, (todo) =>
-    todo.completed ? 'done' : 'pending',
-  );
-  console.log(
-    'stats après changement de filtre à',
-    moment().format('HH:mm:ss'),
-    ':',
-    stats,
-  );
+function selectFilter(filter: FilterValue) {
+  lastFilterChange.value = new Date().toLocaleTimeString('fr-FR');
+  emit('filterChange', filter);
 }
 </script>
+
+<template>
+  <div class="todo-filter">
+    <button
+      v-for="f in filters"
+      :key="f.value"
+      class="btn btn-sm"
+      :class="props.currentFilter === f.value ? 'btn-primary' : 'btn-default'"
+      @click="selectFilter(f.value)"
+    >
+      {{ f.label }}
+      <span v-if="f.value === 'active'" class="badge">{{
+        props.activeCount
+      }}</span>
+      <span v-if="f.value === 'completed'" class="badge">{{
+        props.completedCount
+      }}</span>
+    </button>
+
+    <small v-if="lastFilterChange" class="todo-filter__last-change">
+      (modifié à {{ lastFilterChange }})
+    </small>
+  </div>
+</template>
+
+<style scoped>
+.todo-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.todo-filter__last-change {
+  align-self: center;
+  color: #bbb;
+  font-size: 11px;
+}
+</style>

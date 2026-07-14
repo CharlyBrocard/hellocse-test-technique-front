@@ -22,6 +22,8 @@ const filteredTodos = computed(() => store.getters.filteredTodos);
 const todoCount = computed(() => store.getters.todoCount);
 const completedCount = computed(() => store.getters.completedCount);
 const lastUpdatedFormatted = computed(() => store.getters.lastUpdatedFormatted);
+const activeCount = computed(() => store.getters.activeCount);
+const currentFilter = computed(() => store.state.filter);
 
 const todayFormatted = computed(() => {
   console.log('computed todayFormatted recalculé');
@@ -60,6 +62,10 @@ async function onReloadDirect() {
     console.log('erreur dans onReloadDirect:', e);
   }
 }
+
+function onFilterChange(filter) {
+  store.commit('SET_FILTER', filter);
+}
 </script>
 
 <template>
@@ -77,7 +83,12 @@ async function onReloadDirect() {
     </div>
 
     <TodoForm />
-    <TodoFilter />
+    <TodoFilter
+      :current-filter="currentFilter"
+      :active-count="activeCount"
+      :completed-count="completedCount"
+      @filterChange="onFilterChange"
+    />
 
     <div
       v-if="filteredTodos.length == 0 && !loading"
